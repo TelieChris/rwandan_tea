@@ -1,0 +1,26 @@
+{
+  "canisters": {
+    "rwandan_tea_backend": {
+      "main": "src/rwandan_tea_backend/main.mo",
+      "type": "motoko"
+    },
+    "rwandan_tea_frontend": {
+      "dependencies": [
+        "rwandan_tea_backend"
+      ],
+      "source": [
+        "src/rwandan_tea_frontend/dist"
+      ],
+      "type": "assets",
+      "workspace": "rwandan_tea_frontend"
+    }
+  },
+  "defaults": {
+    "build": {
+      "args": "",
+      "packtool": ""
+    }
+  },
+  "output_env_file": ".env",
+  "version": 1
+}

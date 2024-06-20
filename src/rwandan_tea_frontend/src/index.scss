@@ -1,0 +1,162 @@
+/* Custom styles for the carousel */
+.carousel {
+  background-color: #f8f9fa; 
+  border-radius: 0px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Style for carousel items */
+.carousel-item img {
+  max-height: 80%; 
+  object-fit: cover;
+}
+
+/* Carousel and overlay styles */
+.carousel-fullscreen .carousel-item img {
+  height: 100vh;
+  object-fit: cover;
+}
+
+.welcome-overlay {
+  position: absolute;
+  margin-right: 10%;
+  width: 100%;
+  height: auto;
+  display: flex;
+  padding: 20px;
+  border-radius: 2px;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.2);
+  color: white;
+  z-index: 1;
+}
+
+.welcome-overlay .btn {
+  font-size: 1.5rem;
+  margin-top: 1rem;
+}
+
+
+/* Custom button styles */
+.btn {
+  font-size: 16px;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn:hover {
+  background-color: #0056b3;
+}
+
+/* Custom link styles */
+a {
+  color: #007bff;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: #0056b3;
+}
+
+
+/* Typography */
+h1 {
+  font-size: 2.5rem;
+  color: white;
+  margin-bottom: 20px;
+}
+
+p {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #666;
+}
+
+
+/* Container styles */
+.container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 15px;
+}
+
+/* Center elements */
+.text-center {
+  text-align: center;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .carousel-item img {
+    max-height: 250px; /* Adjust image height for smaller screens */
+  }
+}
+
+/* Fade-in animation */
+.fadeIn {
+  animation: fadeIn 1s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Hover effect on images */
+// .carousel-item img:hover {
+//   transform: scale(0.05);
+// }
+
+/* styles.css */
+
+/* Navbar */
+.navbar {
+  background-color: #007bff; /* Navbar background color */
+}
+
+.navbar-brand {
+  font-size: 1.5rem; /* Brand name font size */
+  color: #fff; /* Brand name color */
+  font-weight: bold; /* Bold font weight */
+}
+
+.navbar-nav .nav-item {
+  margin-right: 10px; /* Margin between navbar items */
+}
+
+.navbar-nav .nav-link {
+  color: #fff; /* Navbar link color */
+}
+
+.navbar-nav .nav-link:hover {
+  color: #f8f9fa; /* Navbar link hover color */
+}
+
+/* Sign In/Out buttons */
+.btn-signin {
+  background-color: #17a2b8; /* Sign In button background color */
+  color: #fff; /* Sign In button text color */
+}
+
+.btn-signin:hover {
+  background-color: #138496; /* Sign In button hover background color */
+}
+
+.btn-signout {
+  color: #fff; /* Sign Out button text color */
+  border-color: #fff; /* Sign Out button border color */
+}
+
+.btn-signout:hover {
+  color: #007bff; /* Sign Out button text hover color */
+  background-color: #fff; /* Sign Out button background hover color */
+}
+
