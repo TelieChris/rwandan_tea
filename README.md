@@ -8,11 +8,7 @@ The Rwandan Tea Traceability System is a decentralized application (dApp) built 
 - [Features](#features)
 - [Technology Stack](#technology-stack)
 - [Installation](#installation)
-- [Usage](#usage)
-- [Backend API](#backend-api)
-- [Frontend Components](#frontend-components)
 - [Contributing](#contributing)
-- [License](#license)
 
 ## Introduction
 
