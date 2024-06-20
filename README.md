@@ -31,4 +31,36 @@ This project provides a comprehensive traceability solution for the Rwandan tea 
 - [Internet Computer (IC)](https://internetcomputer.org/)
 - [Motoko](https://sdk.dfinity.org/docs/language-guide/motoko.html) (Backend)
 - [React](https://reactjs.org/) (Frontend)
-- [dfx SDK](https://sdk.dfinity.org/docs/developers-guide/)
+- [dfx SDK](https://sdk.dfinity.org/docs/developers-guide/cli-reference.html) (Deployment and local development)
+
+## Installation
+
+### Prerequisites
+
+- [Node.js](https://nodejs.org/)
+- [dfx SDK](https://sdk.dfinity.org/docs/developers-guide/install-upgrade-remove.html)
+
+### Steps
+
+1. Clone the repository:
+   git clone https://github.com/TelieChris/rwandan_tea.git
+   cd rwandan_tea
+
+2. Install dependencies:
+  npm install
+
+3. Start dfx and the local Internet Computer replica:
+  dfx start --clean --background
+
+4. Deploy and build the backend canister:
+  dfx deploy
+
+## Contributing
+### We welcome contributions to the project. To contribute, follow these steps:
+
+1. Fork the repository
+2. Create a new branch (git checkout -b feature-branch)
+3. Make your changes
+4. Commit your changes (git commit -m 'Add new feature')
+5. Push to the branch (git push origin feature-branch)
+6. Create a new Pull Request
