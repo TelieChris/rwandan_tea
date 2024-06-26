@@ -4,6 +4,7 @@ import { AuthClient } from "@dfinity/auth-client";
 import { Actor, HttpAgent } from "@dfinity/agent";
 import { idlFactory as rwandan_tea_backend_idl, canisterId as rwandan_tea_backend_id } from '../../../declarations/rwandan_tea_backend';
 import Header from './Header';
+import FarmerHeader from './FarmerHeader';
 
 function CreateTeaBatch() {
   const [name, setName] = useState('');
@@ -84,7 +85,7 @@ function CreateTeaBatch() {
 
   return (
     <>
-      <Header isLoggedIn={isLoggedIn} signIn={signIn} signOut={signOut} />
+      <FarmerHeader isLoggedIn={isLoggedIn} signIn={signIn} signOut={signOut} />
       <main className="container mt-4">
         {isLoggedIn ? (
           <>
@@ -102,7 +103,7 @@ function CreateTeaBatch() {
                 />
               </div>
               <div className="form-group">
-                <label>Quantity</label>
+                <label>Quantity - kg </label>
                 <input 
                   type="number" 
                   className="form-control" 

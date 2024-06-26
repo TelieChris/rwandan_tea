@@ -23,6 +23,7 @@ function Home() {
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [principal, setPrincipal] = useState(null);
+  const [pri, setPri] = useState(null);
   const authClientPromise = AuthClient.create();
 
   const signIn = async () => {
@@ -76,18 +77,28 @@ function Home() {
     checkLoginStatus();
   }, [authClientPromise]);
 
+  // const identitys = window.identity;
+  // setPri(identitys.getPrincipal().toString());
+  
+
   return (
+
     <>
       <Header isLoggedIn={isLoggedIn} signIn={signIn} signOut={signOut} />
       <main>
         <div className="welcome-overlay">
           <div className="container text-center">
-            <h1>Welcome to Rwandan Tea <br/> Tracking System</h1>
+            <h1 className='welcome'>Welcome to Rwandan Tea <br/> Tracking System</h1>
             {isLoggedIn ? (
               <div>
-                <Link to="/create" className="btn btn-primary mr-2">Create Tea Batch</Link>
-                <Link to="/list" className="btn btn-secondary">View Tea Batches</Link>
+                <div>
+                  <Link to="/create" className="btn btn-primary mr-2">Create Tea Batch</Link>
+                  <Link to="/registration" className="btn btn-secondary">Register</Link>
+                </div>
+                <div>
+                <p>Principal Id: {principal.toText()}</p>
               </div>
+            </div>
             ) : (
               <button className="btn btn-primary" onClick={signIn}>Sign In</button>
             )}

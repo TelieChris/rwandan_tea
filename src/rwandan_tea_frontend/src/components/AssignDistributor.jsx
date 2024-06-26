@@ -4,6 +4,7 @@ import { Actor, HttpAgent } from "@dfinity/agent";
 import { idlFactory as rwandan_tea_backend_idl, canisterId as rwandan_tea_backend_id } from '../../../declarations/rwandan_tea_backend';
 import rwandan_tea, { setActor } from '../../services/rwandan_tea';
 import Header from './Header';
+import FarmerHeader from './FarmerHeader';
 
 const roles = [
     { value: "", label: "Select Role" },
@@ -120,7 +121,7 @@ function AssignDistributor() {
 
   return (
     <>
-      <Header isLoggedIn={isLoggedIn} signIn={signIn} signOut={signOut} />
+      <FarmerHeader isLoggedIn={isLoggedIn} signIn={signIn} signOut={signOut} />
       <div className="container mt-4">
         {isLoggedIn ? (
           <>

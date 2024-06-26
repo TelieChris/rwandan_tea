@@ -70,10 +70,14 @@ a:hover {
 /* Typography */
 h1 {
   font-size: 2.5rem;
+  color: black;
+  margin-bottom: 20px;
+}
+.welcome {
+  font-size: 2.5rem;
   color: white;
   margin-bottom: 20px;
 }
-
 p {
   font-size: 1rem;
   line-height: 1.6;
@@ -159,4 +163,22 @@ p {
   color: #007bff; /* Sign Out button text hover color */
   background-color: #fff; /* Sign Out button background hover color */
 }
+
+.admin-login-container {
+  max-width: 400px;
+  margin: 50px auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.admin-login-container h2 {
+  margin-bottom: 20px;
+}
+
+.admin-login-container .form-group {
+  margin-bottom: 15px;
+}
+
 

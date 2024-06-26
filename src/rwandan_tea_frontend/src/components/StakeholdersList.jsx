@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import rwandan_tea from '../../services/rwandan_tea';
 import { AuthClient } from "@dfinity/auth-client";
 import { Actor, HttpAgent } from "@dfinity/agent";
-import Header from './Header'; // Import Header
+import Header from './Header';
+import DistributorHeader from './DistributorHeader';
 
 function StakeholdersList() {
   const [stakeholders, setStakeholders] = useState([]);
@@ -112,7 +113,7 @@ function StakeholdersList() {
 
   return (
     <>
-      <Header isLoggedIn={isLoggedIn} signIn={signIn} signOut={signOut} />
+      <DistributorHeader isLoggedIn={isLoggedIn} signIn={signIn} signOut={signOut} />
       <main className="container mt-4">
         {isLoggedIn ? (
           <>
@@ -120,10 +121,11 @@ function StakeholdersList() {
               <h2>Stakeholders list</h2>
               <table className="table">
                 <thead>
-                  <tr>
+                  <tr className="text-center">
                     <th>ID</th>
                     <th>Name</th>
                     <th>Role</th>
+                    <th>Principal ID</th>
                     <th>Action</th>
                   </tr>
                 </thead>
@@ -133,9 +135,10 @@ function StakeholdersList() {
                       <td>{String(stake.id)}</td>
                       <td>{stake.name}</td>
                       <td>{Object.keys(stake.role)[0]}</td>
+                      <td>{stake.principalId}</td>
                       <td>
-                        <button className="btn btn-primary btn-sm mr-2" onClick={() => deleteStakeholder(stake.id)}>Delete</button>
-                        <button className="btn btn-secondary btn-sm" onClick={() => {
+                        <button  onClick={() => deleteStakeholder(stake.id)}>Delete</button>
+                        <button  onClick={() => {
                           const updatedName = prompt("Enter updated name:", stake.name);
                           const updatedRole = prompt("Enter updated role:", Object.keys(stake.role)[0]);
                           if (updatedName && updatedRole) {

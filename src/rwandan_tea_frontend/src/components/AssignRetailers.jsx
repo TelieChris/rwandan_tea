@@ -4,6 +4,7 @@ import { Actor, HttpAgent } from "@dfinity/agent";
 import { idlFactory as rwandan_tea_backend_idl, canisterId as rwandan_tea_backend_id } from '../../../declarations/rwandan_tea_backend';
 import rwandan_tea, { setActor } from '../../services/rwandan_tea';
 import Header from './Header';
+import DistributorHeader from './DistributorHeader';
 
 const roles = [
     { value: "", label: "Select Role" },
@@ -80,13 +81,13 @@ function AssignRetailer() {
     };
 
     setRole("Retailer");
-    const fetchRetailer = async () => {
+    const fetchRetailers = async () => {
       try {
         const variantRole = { [role]: null };
         const result = await rwandan_tea.getStakeholdersByRole(variantRole);
         setRetailers(result);
       } catch (error) {
-        console.error('Error fetching retailer:', error);
+        console.error('Error fetching retailers:', error);
       }
     };
 
@@ -100,11 +101,11 @@ function AssignRetailer() {
     };
 
     checkLoginStatus();
-    fetchRetailer();
+    fetchRetailers();
     fetchBatches();
   }, [authClientPromise]);
 
-  const assignRetailer = async () => {
+  const AssignRetailer = async () => {
     try {
       const result = await rwandan_tea.assignRetailer(BigInt(batchId), retailer);
       if (result) {
@@ -120,7 +121,7 @@ function AssignRetailer() {
 
   return (
     <>
-      <Header isLoggedIn={isLoggedIn} signIn={signIn} signOut={signOut} />
+      <DistributorHeader isLoggedIn={isLoggedIn} signIn={signIn} signOut={signOut} />
       <div className="container mt-4">
         {isLoggedIn ? (
           <>
@@ -158,7 +159,7 @@ function AssignRetailer() {
                   ))}
                 </select>
               </div>
-              <button className="btn btn-primary mt-3" onClick={assignRetailer}>
+              <button className="btn btn-primary mt-3" onClick={AssignRetailer}>
                 Assign Retailer
               </button>
               {status && <p className="mt-3 text-info">{status}</p>}

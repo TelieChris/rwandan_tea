@@ -3,6 +3,7 @@ import Principal "mo:base/Principal";
 import Debug "mo:base/Debug";
 import Nat "mo:base/Nat";
 
+
 actor rwanda_tea {
 
   // Define roles
@@ -11,6 +12,7 @@ actor rwanda_tea {
     #Distributor;
     #Retailer;
     #Consumer;
+    #Admin;
   };
 
   // Define a stakeholder
@@ -18,6 +20,7 @@ actor rwanda_tea {
     id: Nat;
     role: Role;
     name: Text;
+    principalId: Text;
   };
 
   // Define a tea batch
@@ -39,18 +42,37 @@ actor rwanda_tea {
   var nextId: Nat = 1;
 
   // Function to register a stakeholder
-  public func registerStakeholder(_role: Role, _name: Text): async Nat {
+  public func registerStakeholder(_role: Role, _name: Text, _principalId: Text): async Nat {
     Debug.print("Registering stakeholder...");
     let stakeId = nextId;
     nextId += 1;
     let newStakeholder: Stakeholder = {
-      id = stakeId; 
-      role = _role; 
-      name = _name};
+      id = stakeId;
+      role = _role;
+      name = _name;
+      principalId = _principalId
+    };
     stakeholders := Array.append(stakeholders, [newStakeholder]);
     Debug.print("Stakeholder registered successfully." # Nat.toText(stakeId));
     return stakeId;
   };
+
+  // Function to log in a stakeholder
+  public query func login(name: Text, principalId: Text): async ?Stakeholder {
+    Debug.print("Attempting login...");
+    let stakeOpt = Array.find<Stakeholder>(stakeholders, func(stake) { stake.name == name and stake.principalId == principalId });
+    switch (stakeOpt) {
+      case (null) {
+        Debug.print("Login failed: Stakeholder not found.");
+        return null;
+      };
+      case (?stake) {
+        Debug.print("Login successful.");
+        return ?stake;
+      };
+    }
+  };
+
 
   // A public method that returns the principal of the caller
   public shared(msg) func owner(): async Principal {
@@ -152,13 +174,12 @@ actor rwanda_tea {
   public query func traceTeaBatch(batchId: Nat) : async ?TeaBatch {
     return Array.find<TeaBatch>(teaBatches, func(batch) { batch.id == batchId });
   };
+
   // Function to retrieve all stakeholders
   public query func getStakeholders(): async [Stakeholder] {
     Debug.print("Fetching all Stakeholders...");
     return stakeholders;
   };
-
-
 
   // Function to fetch all tea batches
   public query func getTeaBatches(): async [TeaBatch] {
@@ -172,53 +193,50 @@ actor rwanda_tea {
   public query func getStakeholdersByRole(role: Role): async [Stakeholder] {
     return Array.filter<Stakeholder>(stakeholders, func (s) { s.role == role });
   };
-  
 
   // Function to update stakeholder details
-public func updateStakeholder(stakeId: Nat, _role: Role, _name: Text): async Bool {
-  Debug.print("Updating stakeholder...");
-  let stakeOpt = Array.find<Stakeholder>(stakeholders, func(stake) { stake.id == stakeId });
-  switch (stakeOpt) {
-    case (null) {
-      Debug.print("Error: Stakeholder not found.");
-      return false;
-    };
-    case (?stake) {
-      let updatedStakeholder = {
-        id = stakeId;
-        role = _role;
-        name = _name;
+  public func updateStakeholder(stakeId: Nat, _role: Role, _name: Text, _principalId: Text): async Bool {
+    Debug.print("Updating stakeholder...");
+    let stakeOpt = Array.find<Stakeholder>(stakeholders, func(stake) { stake.id == stakeId });
+    switch (stakeOpt) {
+      case (null) {
+        Debug.print("Error: Stakeholder not found.");
+        return false;
       };
-      stakeholders := Array.map<Stakeholder, Stakeholder>(stakeholders, func(s) {
-        if (s.id == stakeId) updatedStakeholder else s
-      });
-      Debug.print("Stakeholder updated successfully.");
-      return true;
+      case (?stake) {
+        let updatedStakeholder = {
+          id = stakeId;
+          role = _role;
+          name = _name;
+          principalId = _principalId;
+        };
+        stakeholders := Array.map<Stakeholder, Stakeholder>(stakeholders, func(s) {
+          if (s.id == stakeId) updatedStakeholder else s
+        });
+        Debug.print("Stakeholder updated successfully.");
+        return true;
+      };
     };
   };
-};
 
-
-// Function to delete a stakeholder
-public func deleteStakeholder(stakeId: Nat): async Bool {
-  Debug.print("Deleting stakeholder...");
-  
-  let stakeOpt = Array.find<Stakeholder>(stakeholders, func(stake) { stake.id == stakeId });
-  
-  switch (stakeOpt) {
-    case (null) {
-      Debug.print("Error: Stakeholder not found.");
-      return false;
-    };
-    case (?stake) {
-      let updatedStakeholders = Array.filter<Stakeholder>(stakeholders, func(s) { s.id != stakeId });
-      stakeholders := updatedStakeholders;
-      Debug.print("Stakeholder deleted successfully.");
-      return true;
+  // Function to delete a stakeholder
+  public func deleteStakeholder(stakeId: Nat): async Bool {
+    Debug.print("Deleting stakeholder...");
+    
+    let stakeOpt = Array.find<Stakeholder>(stakeholders, func(stake) { stake.id == stakeId });
+    
+    switch (stakeOpt) {
+      case (null) {
+        Debug.print("Error: Stakeholder not found.");
+        return false;
+      };
+      case (?stake) {
+        let updatedStakeholders = Array.filter<Stakeholder>(stakeholders, func(s) { s.id != stakeId });
+        stakeholders := updatedStakeholders;
+        Debug.print("Stakeholder deleted successfully.");
+        return true;
+      };
     };
   };
-};
-
-
 
 };

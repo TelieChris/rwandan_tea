@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import { AnonymousIdentity } from "@dfinity/agent";
+import { getActor, seedToIdentity } from "./identity";
 import { Modal, Button } from 'react-bootstrap';  // Importing Modal and Button from react-bootstrap
 import { AuthClient } from "@dfinity/auth-client";
 import { Actor, HttpAgent } from "@dfinity/agent";
 import { idlFactory as rwandan_tea_backend_idl, canisterId as rwandan_tea_backend_id } from '../../../declarations/rwandan_tea_backend';
 import rwandan_tea, { setActor } from '../../services/rwandan_tea';
-import Header from './Header';
+import Header from '../components/Header';
 
 const roles = [
   { value: "", label: "Select Role" },
@@ -14,16 +16,20 @@ const roles = [
   { value: "Consumer", label: "Consumer" }
 ];
 
-function CreateStakeholders() {
-  const [name, setName] = useState('');
+function Registration() {
+  const [identity, setIdentity] = useState(null);
+  const [count, setCount] = useState(0);
+
+  const [username, setUsername] = useState('');
   const [role, setRole] = useState(roles[0].value);
   const [status, setStatus] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [principal, setPrincipal] = useState(null);
+  const [principalId, setPrincipalId] = useState(null);
   const [showModal, setShowModal] = useState(false);  // State for controlling modal visibility
-
+  
   const authClientPromise = AuthClient.create();
-
+  
   const signIn = async () => {
     const authClient = await authClientPromise;
     const internetIdentityUrl = process.env.NODE_ENV === 'production'
@@ -41,14 +47,14 @@ function CreateStakeholders() {
     updateIdentity(identity);
     setIsLoggedIn(true);
   };
-
+  
   const signOut = async () => {
     const authClient = await authClientPromise;
     await authClient.logout();
     updateIdentity(null);
     setIsLoggedIn(false);
   };
-
+  
   const updateIdentity = (identity) => {
     if (identity) {
       setPrincipal(identity.getPrincipal());
@@ -66,7 +72,7 @@ function CreateStakeholders() {
       setActor(null);
     }
   };
-
+  
   useEffect(() => {
     const checkLoginStatus = async () => {
       const authClient = await authClientPromise;
@@ -80,11 +86,11 @@ function CreateStakeholders() {
 
     checkLoginStatus();
   }, [authClientPromise]);
-
+  
   const registerStakeholder = async () => {
     try {
       const variantRole = { [role]: null };
-      await rwandan_tea.registerStakeholder(variantRole, name);
+      await rwandan_tea.registerStakeholder(variantRole, username , principalId);
       setStatus('Stakeholder registered successfully!');
       setShowModal(true);  // Show modal on successful registration
     } catch (error) {
@@ -93,68 +99,103 @@ function CreateStakeholders() {
     }
   };
 
+  useEffect(() => {
+    setupListeners();
+  }, [identity]);
+
+  const setupListeners = () => {
+    const secretInput = document.querySelector("#name");
+    if (secretInput) {
+      secretInput.addEventListener("input", handleChange);
+    }
+
+    const form = document.querySelector("#form");
+    if (form) {
+      form.addEventListener("submit", (event) => {
+        event.preventDefault();
+        return false;
+      });
+    }
+  };
+
+  const handleChange = async (event) => {
+    const { value } = event.target;
+    try {
+      const newIdentity = seedToIdentity(value);
+      if (newIdentity) {
+        setIdentity(newIdentity);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+
   return (
-    <>
+    <div>
       <Header isLoggedIn={isLoggedIn} signIn={signIn} signOut={signOut} />
       <div className="container mt-4">
-        {isLoggedIn ? (
-          <>
-            <h2>Register Stakeholder</h2>
+        <form id="form">
             <div className="card p-4">
+            <h2 className="text-center">Register Stakeholder</h2>
               <div className="form-group">
-                <label htmlFor="name">Name</label>
+                <label htmlFor="name">Username:</label>
                 <input
                   type="text"
                   className="form-control"
                   id="name"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
+                  onChange={(e) => setUsername(e.target.value)}
+                />
+                
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="name">Principal ID:</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="principal"
+                    value={identity ? identity.getPrincipal().toString() : ""}
+                    onChange={(e) => setPrincipalId(e.target.value)}
+                    disabled
+                  />
+                </div>
+
+                <div className="form-group">
+                <label htmlFor="name">Copy & Paste the Principal ID:</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  id="principalId"
+                  value={principalId}
+                  onChange={(e) => setPrincipalId(e.target.value)}
                 />
               </div>
-              <div className="form-group">
-                <label htmlFor="role">Role</label>
-                <select
-                  className="form-control"
-                  id="role"
-                  value={role}
-                  onChange={(e) => setRole(e.target.value)}
-                >
-                  {roles.map((r) => (
-                    <option key={r.value} value={r.value}>
-                      {r.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <button className="btn btn-primary mt-3" onClick={registerStakeholder}>
-                Register
-              </button>
-              {status && <p className="mt-3 text-info">{status}</p>}
-            </div>
-          </>
-        ) : (
-          <div className="text-center">
-            <button className="btn btn-primary" onClick={signIn}>Sign In</button>
-          </div>
-        )}
-      </div>
 
-      {/* Modal for successful registration */}
-      <Modal show={showModal} onHide={() => setShowModal(false)}>
-        <Modal.Header closeButton>
-          <Modal.Title>Registration Successful</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          Stakeholder registered successfully!
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowModal(false)}>
-            Close
-          </Button>
-        </Modal.Footer>
-      </Modal>
-    </>
+                <div className="form-group">
+                  <label htmlFor="role">Role</label>
+                    <select
+                      className="form-control"
+                      id="role"
+                      value={role}
+                      onChange={(e) => setRole(e.target.value)}
+                    >
+                      {roles.map((r) => (
+                        <option key={r.value} value={r.value}>
+                          {r.label}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <button className="btn btn-primary mt-3" onClick={registerStakeholder}>
+                    Register
+                  </button>
+                </div>
+              {status && <p className="mt-3 text-info">{status}</p>}
+              </form>
+        </div>
+    </div>
   );
 }
 
-export default CreateStakeholders;
+export default Registration;
