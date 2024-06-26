@@ -11,25 +11,24 @@ function Header({ isLoggedIn, signOut, signIn }) {
             {isLoggedIn ? (
               <>
                 <li className="nav-item">
-                  <Link className="nav-link" to="/create">Create Tea Batch</Link>
-                </li>
-                <li className="nav-item">
-                  <Link className="nav-link" to="/list">View Tea Batches</Link>
-                </li>
-                <li className="nav-item">
                   <Link className="nav-link" to="/register_stakeholder">Register Stakeholder</Link>
                 </li>
                 <li className="nav-item">
-                  <Link className="nav-link" to="/stakeholders">View Stakeholder</Link>
+                  <Link className="nav-link" to="/stakeholders-adm">View Stakeholder</Link>
                 </li>
                 <li>
                   <button className="btn btn-outline-danger" onClick={signOut}>Sign Out</button>
                 </li>
               </>
             ) : (
-              <li className="nav-item">
-                <button className="btn btn-outline-primary" onClick={signIn}>Sign In</button>
+              <>
+                <li className="nav-item">
+                 <button className="btn btn-outline-primary" onClick={signIn}>Sign In</button>
+                </li>
+                <li className="nav-item">
+                  <Link className="btn btn-outline-primary" to="/">Another Account</Link>
               </li>
+             </>
             )}
           </ul>
         </div>

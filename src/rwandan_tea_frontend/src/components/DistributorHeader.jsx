@@ -24,9 +24,14 @@ function DistributorHeader({ isLoggedIn, signOut, signIn }) {
                 </li>
               </>
             ) : (
-              <li className="nav-item">
-                <button className="btn btn-outline-primary" onClick={signIn}>Sign In</button>
-              </li>
+              <>
+                <li className="nav-item">
+                  <button className="btn btn-outline-primary" onClick={signIn}>Sign In</button>
+                </li>
+                <li className="nav-item">
+                  <Link className="btn btn-outline-primary" to="/">Another Account</Link>
+                </li>
+              </>
             )}
           </ul>
         </div>

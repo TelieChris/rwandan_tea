@@ -11,6 +11,7 @@ import AssignRetailer from './components/AssignRetailers';
 import Login from './components/Login';
 import Registration from './registration/registration';
 import Dashboard from './components/Dashboard';
+import StakeholdersListAdm from './components/StakeholdersListAdm';
 
 const App = () => {
   const [stakeholder, setStakeholder] = useState(null);
@@ -24,6 +25,7 @@ const App = () => {
         <Route path="/list" element={<TeaBatchList />} />
         <Route path='/register_stakeholder' element={<Registration />} />
         <Route path='/stakeholders' element={<StakeholdersList />} />
+        <Route path='/stakeholders-adm' element={<StakeholdersListAdm />} />
         <Route path="/assign-retailers" element={<AssignRetailer />} />
         <Route path="/registration" element={<Registration/>} />
         <Route path="/dashboard" element={<Dashboard stakeholder={stakeholder} />} />

@@ -166,6 +166,7 @@ const Login = ({ setStakeholder }) => {
             <button type="submit" className="btn btn-primary w-100">
               Login
             </button>
+            <h3 className='defaultCredential'>For Admin Just use! Name: 'admin' & Principal ID: 'admin123'</h3>
           </form>
         </div>
         </>
