@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-function FarmerHeader({ isLoggedIn, signOut, signIn }) {
+function FactoryHeader({ isLoggedIn, signOut, signIn }) {
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light">
       <div className="container">
@@ -11,13 +11,10 @@ function FarmerHeader({ isLoggedIn, signOut, signIn }) {
             {isLoggedIn ? (
               <>
                 <li className="nav-item">
-                  <Link className="nav-link" to="/create">Create Tea Batch</Link>
+                  <Link className="nav-link" to="/list-fact">View Tea Batches</Link>
                 </li>
                 <li className="nav-item">
-                  <Link className="nav-link" to="/list">View Tea Batches</Link>
-                </li>
-                <li className="nav-item">
-                  <Link className="nav-link" to="/assign-factory">Assign Factory</Link>
+                  <Link className="nav-link" to="/assign-distributor">Assign Destributor</Link>
                 </li>
                 <li>
                   <button className="btn btn-outline-danger" onClick={signOut}>Sign Out</button>
@@ -40,4 +37,4 @@ function FarmerHeader({ isLoggedIn, signOut, signIn }) {
   );
 }
 
-export default FarmerHeader;
+export default FactoryHeader;

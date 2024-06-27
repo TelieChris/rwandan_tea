@@ -9,6 +9,7 @@ actor rwanda_tea {
   // Define roles
   type Role = {
     #Farmer;
+    #Factory;
     #Distributor;
     #Retailer;
     #Consumer;
@@ -27,6 +28,7 @@ actor rwanda_tea {
   type TeaBatch = {
     id: Nat;
     farmer: Text;
+    factory: ?Text;
     distributor: ?Text;
     retailer: ?Text;
     quantity: Nat;
@@ -89,6 +91,7 @@ actor rwanda_tea {
     let newTeaBatch: TeaBatch = {
       id = batchId;
       farmer = farmer;
+      factory = null;
       distributor = null;
       retailer = null;
       quantity = quantity;
@@ -121,6 +124,7 @@ actor rwanda_tea {
             {
               id = b.id;
               farmer = b.farmer;
+              factory = b.factory;
               distributor = ?distributor;
               retailer = b.retailer;
               quantity = b.quantity;
@@ -138,6 +142,38 @@ actor rwanda_tea {
     }
   };
 
+   // Function to assign distributor
+  public func assignFactory(batchId: Nat, factory: Text): async Bool {
+    Debug.print("Assigning factory...");
+    let batchOpt = Array.find<TeaBatch>(teaBatches, func(batch) { batch.id == batchId });
+    switch (batchOpt) {
+      case (null) { 
+        Debug.print("Error: Tea batch not found.");
+        return false 
+      };
+      case (?batch) {
+        let updatedBatches = Array.map<TeaBatch, TeaBatch>(teaBatches, func(b) {
+          if (b.id == batchId) {
+            {
+              id = b.id;
+              farmer = b.farmer;
+              factory = ?factory;
+              distributor = b.distributor;
+              retailer = b.retailer;
+              quantity = b.quantity;
+              status = "Assigned to Factory";
+              qrCode = b.qrCode;
+            };
+          } else {
+            b;
+          }
+        });
+        teaBatches := updatedBatches;
+        Debug.print("Factory assigned successfully.");
+        return true;
+      }
+    }
+  };
   // Function to assign retailer
   public func assignRetailer(batchId: Nat, retailer: Text) : async Bool {
     let batchOpt = Array.find<TeaBatch>(teaBatches, func(batch) { batch.id == batchId });
@@ -153,6 +189,7 @@ actor rwanda_tea {
             {
               id = b.id;
               farmer = b.farmer;
+              factory = b.factory;
               distributor = b.distributor;
               retailer = ?retailer;
               quantity = b.quantity;

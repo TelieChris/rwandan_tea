@@ -11,10 +11,7 @@ function DistributorHeader({ isLoggedIn, signOut, signIn }) {
             {isLoggedIn ? (
               <>
                 <li className="nav-item">
-                  <Link className="nav-link" to="/list">View Tea Batches</Link>
-                </li>
-                <li className="nav-item">
-                  <Link className="nav-link" to="/stakeholders">View Stakeholder</Link>
+                  <Link className="nav-link" to="/list-dist">View Tea Batches</Link>
                 </li>
                 <li className="nav-item">
                   <Link className="nav-link" to="/assign-retailers">Assign Retailer</Link>

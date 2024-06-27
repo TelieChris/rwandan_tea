@@ -2,10 +2,9 @@ import React, { useState, useEffect } from 'react';
 import rwandan_tea from '../../services/rwandan_tea';
 import { AuthClient } from "@dfinity/auth-client";
 import { Actor, HttpAgent } from "@dfinity/agent";
-import Header from './Header';
-import FarmerHeader from './FarmerHeader';
+import FactoryHeader from './FactoryHeader';
 
-function TeaBatchList() {
+function TeaBatchListDist() {
   const [batches, setBatches] = useState([]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [principal, setPrincipal] = useState(null);
@@ -84,7 +83,7 @@ function TeaBatchList() {
 
   return (
     <>
-      <FarmerHeader isLoggedIn={isLoggedIn} signIn={() => {}} signOut={() => {}} />
+      <FactoryHeader isLoggedIn={isLoggedIn} signIn={() => {}} signOut={() => {}} />
       <main className="container mt-4">
       {isLoggedIn ? (
         <>
@@ -127,4 +126,4 @@ function TeaBatchList() {
 
 }
 
-export default TeaBatchList;
+export default TeaBatchListDist;

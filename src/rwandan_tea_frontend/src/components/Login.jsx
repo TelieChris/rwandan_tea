@@ -7,9 +7,9 @@ import { Actor, HttpAgent } from "@dfinity/agent";
 import { Carousel } from 'react-bootstrap';
 import { idlFactory as rwandan_tea_backend_idl, canisterId as rwandan_tea_backend_id } from '../../../declarations/rwandan_tea_backend';
 
-import cotragagiImage from '../images/cotragagi.jpeg';
-import FERWACOTHESLIDERImage from '../images/FERWACOTHESLIDER.jpg';
-import rubayaImage from '../images/rubaya.jpeg';
+import cotragagiImage from '../images/tea_bashes.jpg';
+import FERWACOTHESLIDERImage from '../images/tea_famers.jpg';
+import rubayaImage from '../images/tea1.jpg';
 
 
 const Login = ({ setStakeholder }) => {
@@ -138,7 +138,7 @@ const Login = ({ setStakeholder }) => {
       <div className="container text-center">
         {isLoggedIn ? (
         <>
-        <div className="admin-login-container">
+        <div className="login-container">
           <h2 className="text-center">Login</h2>
           {error && <div className="alert alert-danger">{error}</div>}
           <form onSubmit={handleSubmit}>
@@ -173,9 +173,6 @@ const Login = ({ setStakeholder }) => {
         ) : (
           <>
             <h1 className='welcome'>Welcome to Rwandan Tea <br/> Tracking System</h1>
-            <div className="text-center">
-              <button className="btn btn-primary" onClick={signIn}>Sign In</button>
-            </div>
           </>
         )}
         </div>

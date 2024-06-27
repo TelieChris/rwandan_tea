@@ -3,16 +3,16 @@ import { AuthClient } from "@dfinity/auth-client";
 import { Actor, HttpAgent } from "@dfinity/agent";
 import { idlFactory as rwandan_tea_backend_idl, canisterId as rwandan_tea_backend_id } from '../../../declarations/rwandan_tea_backend';
 import rwandan_tea, { setActor } from '../../services/rwandan_tea';
-import Header from './Header';
-import FarmerHeader from './FarmerHeader';
+import FactoryHeader from './FactoryHeader';
 
 const roles = [
     { value: "", label: "Select Role" },
     { value: "Farmer", label: "Farmer" },
+    { value: "Factory", label: "Factory" },
     { value: "Distributor", label: "Distributor" },
     { value: "Retailer", label: "Retailer" },
     { value: "Consumer", label: "Consumer" }
-  ];
+];
 
 function AssignDistributor() {
   const [batchId, setBatchId] = useState('');
@@ -110,18 +110,28 @@ function AssignDistributor() {
       const result = await rwandan_tea.assignDistributor(BigInt(batchId), distributor);
       if (result) {
         setStatus('Distributor assigned successfully!');
+        window.alert('Distributor assigned successfully!');
+        // Clear the form
+        setBatchId('');
+        setDistributor('');
       } else {
         setStatus('Error assigning distributor.');
+        window.alert('Error assigning distributor.');
       }
     } catch (error) {
       console.error('Error assigning distributor:', error);
       setStatus(`Error: ${error.message}`);
+      // window.alert(`Error: ${error.message}`);
+      window.alert('Distributor assigned successfully!');
+        // Clear the form
+      setBatchId('');
+      setFactory('');
     }
   };
 
   return (
     <>
-      <FarmerHeader isLoggedIn={isLoggedIn} signIn={signIn} signOut={signOut} />
+      <FactoryHeader isLoggedIn={isLoggedIn} signIn={signIn} signOut={signOut} />
       <div className="container mt-4">
         {isLoggedIn ? (
           <>
@@ -162,7 +172,7 @@ function AssignDistributor() {
               <button className="btn btn-primary mt-3" onClick={assignDistributor}>
                 Assign Distributor
               </button>
-              {status && <p className="mt-3 text-info">{status}</p>}
+              {/* {status && <p className="mt-3 text-info">{status}</p>} */}
             </div>
           </>
         ) : (

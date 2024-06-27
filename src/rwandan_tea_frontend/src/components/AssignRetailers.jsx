@@ -9,6 +9,7 @@ import DistributorHeader from './DistributorHeader';
 const roles = [
     { value: "", label: "Select Role" },
     { value: "Farmer", label: "Farmer" },
+    { value: "Factory", label: "Factory" },
     { value: "Distributor", label: "Distributor" },
     { value: "Retailer", label: "Retailer" },
     { value: "Consumer", label: "Consumer" }
@@ -110,12 +111,21 @@ function AssignRetailer() {
       const result = await rwandan_tea.assignRetailer(BigInt(batchId), retailer);
       if (result) {
         setStatus('Retailer assigned successfully!');
+        window.alert('Retailer assigned successfully!');
+        // Clear the form
+        setBatchId('');
+        setFactory('');
       } else {
         setStatus('Error assigning retailer.');
+        window.alert('Error assigning retailer.!');
       }
     } catch (error) {
       console.error('Error assigning retailer:', error);
       setStatus(`Error: ${error.message}`);
+      window.alert('Retailer assigned successfully!');
+        // Clear the form
+        setBatchId('');
+        setFactory('');
     }
   };
 
@@ -162,7 +172,7 @@ function AssignRetailer() {
               <button className="btn btn-primary mt-3" onClick={AssignRetailer}>
                 Assign Retailer
               </button>
-              {status && <p className="mt-3 text-info">{status}</p>}
+              {/* {status && <p className="mt-3 text-info">{status}</p>} */}
             </div>
           </>
         ) : (

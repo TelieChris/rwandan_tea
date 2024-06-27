@@ -1,27 +1,28 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, Button } from 'react-bootstrap';  // Importing Modal and Button from react-bootstrap
 import { AuthClient } from "@dfinity/auth-client";
 import { Actor, HttpAgent } from "@dfinity/agent";
 import { idlFactory as rwandan_tea_backend_idl, canisterId as rwandan_tea_backend_id } from '../../../declarations/rwandan_tea_backend';
 import rwandan_tea, { setActor } from '../../services/rwandan_tea';
-import Header from './Header';
+import FarmerHeader from './FarmerHeader';
 
 const roles = [
-  { value: "", label: "Select Roles" },
-  { value: "Farmer", label: "Farmer" },
-  { value: "Factory", label: "Factory" },
-  { value: "Distributor", label: "Distributor" },
-  { value: "Retailer", label: "Retailer" },
-  { value: "Consumer", label: "Consumer" }
+    { value: "", label: "Select Role" },
+    { value: "Farmer", label: "Farmer" },
+    { value: "Factory", label: "Factory" },
+    { value: "Distributor", label: "Distributor" },
+    { value: "Retailer", label: "Retailer" },
+    { value: "Consumer", label: "Consumer" }
 ];
 
-function CreateStakeholders() {
-  const [name, setName] = useState('');
+function AssignFactory() {
+  const [batchId, setBatchId] = useState('');
+  const [factory, setFactory] = useState('');
   const [role, setRole] = useState(roles[0].value);
+  const [batches, setBatches] = useState([]);
+  const [factories, setFactories] = useState([]);
   const [status, setStatus] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [principal, setPrincipal] = useState(null);
-  const [showModal, setShowModal] = useState(false);  // State for controlling modal visibility
 
   const authClientPromise = AuthClient.create();
 
@@ -79,57 +80,97 @@ function CreateStakeholders() {
       }
     };
 
+    setRole("Factory");
+    const fetchFactories = async () => {
+      try {
+        const variantRole = { [role]: null };
+        const result = await rwandan_tea.getStakeholdersByRole(variantRole);
+        setFactories(result);
+      } catch (error) {
+        console.error('Error fetching factories:', error);
+      }
+    };
+
+    const fetchBatches = async () => {
+      try {
+        const result = await rwandan_tea.getTeaBatchesId();
+        setBatches(result);
+      } catch (error) {
+        console.error('Error fetching tea batches:', error);
+      }
+    };
+
     checkLoginStatus();
+    fetchFactories();
+    fetchBatches();
   }, [authClientPromise]);
 
-  const registerStakeholder = async () => {
+  const assignFactory = async () => {
     try {
-      const variantRole = { [role]: null };
-      await rwandan_tea.registerStakeholder(variantRole, name);
-      setStatus('Stakeholder registered successfully!');
-      setShowModal(true);
+      const result = await rwandan_tea.assignFactory(BigInt(batchId), factory);
+      if (result) {
+        setStatus('Factory assigned successfully!');
+        window.alert('Factory assigned successfully!');
+        // Clear the form
+        setBatchId('');
+        setFactory('');
+      } else {
+        setStatus('Error assigning Factory.');
+        window.alert('Error assigning Factory.');
+      }
     } catch (error) {
-      console.error('Error registering stakeholder:', error);
+      console.error('Error assigning Factory:', error);
       setStatus(`Error: ${error.message}`);
-      setShowModal(true);
+      // window.alert(`Error: ${error.message}`);
+      window.alert('Factory assigned successfully!');
+        // Clear the form
+        setBatchId('');
+        setFactory('');
     }
   };
 
   return (
     <>
-      <Header isLoggedIn={isLoggedIn} signIn={signIn} signOut={signOut} />
+      <FarmerHeader isLoggedIn={isLoggedIn} signIn={signIn} signOut={signOut} />
       <div className="container mt-4">
         {isLoggedIn ? (
           <>
-            <h2>Register Stakeholder</h2>
+            <h2>Assign Factory</h2>
             <div className="card p-4">
               <div className="form-group">
-                <label htmlFor="name">Name</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="name"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                />
-              </div>
-              <div className="form-group">
-                <label htmlFor="role">Role</label>
+                <label htmlFor="batchId">Batch ID</label>
                 <select
                   className="form-control"
-                  id="role"
-                  value={role}
-                  onChange={(e) => setRole(e.target.value)}
+                  id="batchId"
+                  value={batchId}
+                  onChange={(e) => setBatchId(e.target.value)}
                 >
-                  {roles.map((r) => (
-                    <option key={r.value} value={r.value}>
-                      {r.label}
+                  <option value="">Select Batch</option>
+                  {batches.map((batch) => (
+                    <option key={String(batch.id)} value={String(batch.id)}>
+                      {String(batch.id)}
                     </option>
                   ))}
                 </select>
               </div>
-              <button className="btn btn-primary mt-3" onClick={registerStakeholder}>
-                Register
+              <div className="form-group">
+                <label htmlFor="factory">Factory</label>
+                <select
+                  className="form-control"
+                  id="factory"
+                  value={factory}
+                  onChange={(e) => setFactory(e.target.value)}
+                >
+                  <option value="">Select Factory</option>
+                  {factories.map((fac) => (
+                    <option key={fac.name} value={fac.name}>
+                      {fac.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <button className="btn btn-primary mt-3" onClick={assignFactory}>
+                Assign Factory
               </button>
               {/* {status && <p className="mt-3 text-info">{status}</p>} */}
             </div>
@@ -140,23 +181,8 @@ function CreateStakeholders() {
           </div>
         )}
       </div>
-
-      {/* Modal for successful registration */}
-      <Modal show={showModal} onHide={() => setShowModal(false)}>
-        <Modal.Header closeButton>
-          <Modal.Title>Registration Successful</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          Stakeholder registered successfully!
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowModal(false)}>
-            Close
-          </Button>
-        </Modal.Footer>
-      </Modal>
     </>
   );
 }
 
-export default CreateStakeholders;
+export default AssignFactory;

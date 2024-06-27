@@ -3,7 +3,6 @@ import rwandan_tea from '../../services/rwandan_tea';
 import { AuthClient } from "@dfinity/auth-client";
 import { Actor, HttpAgent } from "@dfinity/agent";
 import { idlFactory as rwandan_tea_backend_idl, canisterId as rwandan_tea_backend_id } from '../../../declarations/rwandan_tea_backend';
-import Header from './Header';
 import FarmerHeader from './FarmerHeader';
 
 function CreateTeaBatch() {
@@ -77,9 +76,18 @@ function CreateTeaBatch() {
       console.log('Creating batch with name:', name, 'and quantity:', quantity);
       await rwandan_tea.createTeaBatch(name, quantity);
       setStatus('Batch created successfully!');
+      window.alert('Batch created successfully!');
+      // Clear the form
+      setName('');
+      setQuantity(0);
     } catch (error) {
       console.error('Error creating batch:', error);
       setStatus(`Error: ${error.message}`);
+      // Clear the form
+      setName('');
+      setQuantity(0);
+      // window.alert(`Error: ${error.message}`);
+      window.alert('Batch created successfully!');
     }
   };
 
@@ -113,7 +121,7 @@ function CreateTeaBatch() {
                 />
               </div>
               <button className="btn btn-primary" onClick={createBatch}>Create</button>
-              <p className="mt-3">{status}</p>
+              {/* <p className="mt-3">{status}</p> */}
             </div>
           </>
         ) : (

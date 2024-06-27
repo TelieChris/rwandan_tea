@@ -11,6 +11,7 @@ import Header from '../components/Header';
 const roles = [
   { value: "", label: "Select Role" },
   { value: "Farmer", label: "Farmer" },
+  { value: "Factory", label: "Factory" },
   { value: "Distributor", label: "Distributor" },
   { value: "Retailer", label: "Retailer" },
   { value: "Consumer", label: "Consumer" }
@@ -19,7 +20,6 @@ const roles = [
 function Registration() {
   const [identity, setIdentity] = useState(null);
   const [count, setCount] = useState(0);
-
   const [username, setUsername] = useState('');
   const [role, setRole] = useState(roles[0].value);
   const [status, setStatus] = useState('');
@@ -90,13 +90,22 @@ function Registration() {
   const registerStakeholder = async () => {
     try {
       const variantRole = { [role]: null };
-      await rwandan_tea.registerStakeholder(variantRole, username , principalId);
+      await rwandan_tea.registerStakeholder(variantRole, username, principalId);
       setStatus('Stakeholder registered successfully!');
       setShowModal(true);  // Show modal on successful registration
     } catch (error) {
       console.error('Error registering stakeholder:', error);
       setStatus(`Error: ${error.message}`);
+      setShowModal(true);
     }
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+    // Clear the form
+    setUsername('');
+    setRole(roles[0].value);
+    setPrincipalId('');
   };
 
   useEffect(() => {
@@ -130,70 +139,79 @@ function Registration() {
     }
   };
 
-
   return (
     <div>
       <Header isLoggedIn={isLoggedIn} signIn={signIn} signOut={signOut} />
       <div className="container mt-4">
         <form id="form">
-            <div className="card p-4">
+          <div className="card p-4">
             <h2 className="text-center">Register Stakeholder</h2>
-              <div className="form-group">
-                <label htmlFor="name">Username:</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="name"
-                  onChange={(e) => setUsername(e.target.value)}
-                />
-                
-              </div>
+            <div className="form-group">
+              <label htmlFor="name">Username:</label>
+              <input
+                type="text"
+                className="form-control"
+                id="name"
+                onChange={(e) => setUsername(e.target.value)}
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="principal">Principal ID:</label>
+              <input
+                type="text"
+                className="form-control"
+                id="principal"
+                value={identity ? identity.getPrincipal().toString() : ""}
+                onChange={(e) => setPrincipalId(e.target.value)}
+                disabled
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="principalId">Copy & Paste the Principal ID:</label>
+              <input
+                type="text"
+                className="form-control"
+                id="principalId"
+                value={principalId}
+                onChange={(e) => setPrincipalId(e.target.value)}
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="role">Role</label>
+              <select
+                className="form-control"
+                id="role"
+                value={role}
+                onChange={(e) => setRole(e.target.value)}
+              >
+                {roles.map((r) => (
+                  <option key={r.value} value={r.value}>
+                    {r.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <button className="btn btn-primary mt-3" onClick={registerStakeholder}>
+              Register
+            </button>
+          </div>
+        </form>
+      </div>
 
-              <div className="form-group">
-                <label htmlFor="name">Principal ID:</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="principal"
-                    value={identity ? identity.getPrincipal().toString() : ""}
-                    onChange={(e) => setPrincipalId(e.target.value)}
-                    disabled
-                  />
-                </div>
-
-                <div className="form-group">
-                <label htmlFor="name">Copy & Paste the Principal ID:</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="principalId"
-                  value={principalId}
-                  onChange={(e) => setPrincipalId(e.target.value)}
-                />
-              </div>
-
-                <div className="form-group">
-                  <label htmlFor="role">Role</label>
-                    <select
-                      className="form-control"
-                      id="role"
-                      value={role}
-                      onChange={(e) => setRole(e.target.value)}
-                    >
-                      {roles.map((r) => (
-                        <option key={r.value} value={r.value}>
-                          {r.label}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  <button className="btn btn-primary mt-3" onClick={registerStakeholder}>
-                    Register
-                  </button>
-                </div>
-              {status && <p className="mt-3 text-info">{status}</p>}
-              </form>
-        </div>
+      {/* Modal for successful registration */}
+      <Modal show={showModal} onHide={handleCloseModal}>
+        <Modal.Header closeButton>
+          <Modal.Title>Registration Successful</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {status}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleCloseModal}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 }

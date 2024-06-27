@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import DistributorHeader from './DistributorHeader';
 import FarmerHeader from './FarmerHeader';
+import FactoryHeader from './FactoryHeader';
 import Header from './Header';
 import rwandan_tea from '../../services/rwandan_tea';
 import { AuthClient } from "@dfinity/auth-client";
@@ -112,6 +113,27 @@ const Dashboard = ({ stakeholder }) => {
                   <div className="admin-login-container">
                       <h1>Welcome, {stakeholder.name}</h1><br/><br/>
                       <p>This is Farmer's Dashboard</p>
+                  </div>
+                </div>
+              </>
+            ) : (
+                <div className="text-center">
+                  <button className="btn btn-primary" onClick={signIn}>Sign In</button>
+                </div>
+            )}
+          </main>
+      </>
+      )}
+      {role === 'Factory' && (
+        <>
+        <FactoryHeader isLoggedIn={isLoggedIn} signIn={signIn} signOut={signOut} />
+          <main>
+            {isLoggedIn ? (
+              <>
+                <div className="container mt-4">
+                  <div className="admin-login-container">
+                      <h1>Welcome, {stakeholder.name}</h1><br/><br/>
+                      <p>This is Factory's Dashboard</p>
                   </div>
                 </div>
               </>
