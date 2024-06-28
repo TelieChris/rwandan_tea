@@ -204,7 +204,7 @@ function Registration() {
           <Modal.Title>Registration Successful</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {status}
+          {/* {status} */}
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleCloseModal}>
